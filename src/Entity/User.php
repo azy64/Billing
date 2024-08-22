@@ -57,10 +57,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Company::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $companies;
 
+    /**
+     * @var Collection<int, Customer>
+     */
+    #[ORM\OneToMany(targetEntity: Customer::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $customers;
+
     public function __construct() {
         $this->roles[]="ROLE_USER";
         $this->createAt= new \DateTimeImmutable();
         $this->companies = new ArrayCollection();
+        $this->customers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +229,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($company->getOwner() === $this) {
                 $company->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Customer>
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): static
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers->add($customer);
+            $customer->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): static
+    {
+        if ($this->customers->removeElement($customer)) {
+            // set the owning side to null (unless already changed)
+            if ($customer->getCreatedBy() === $this) {
+                $customer->setCreatedBy(null);
             }
         }
 
