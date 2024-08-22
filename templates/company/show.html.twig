@@ -1,0 +1,64 @@
+{% extends 'dashboard/index.html.twig' %}
+
+{% block title %}Dashboard - Company{% endblock %}
+
+{% block content_page %}
+<div class="col-md-11 m-auto">
+    <h1>
+     <img src="{{asset('uploads/logo')}}/{{company.logo}}" 
+     class="img-rounded" title="{{company.name}}"
+     id="company-logo"
+     />
+    {{company.name}}
+   <a href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+    </h1>
+    <hr/>
+
+    <table class="table">
+        <tbody>
+           <!-- <tr>
+                <th>Id</th>
+                <td>{{ company.id }}</td>
+            </tr>-->
+            <tr>
+                <th> Company's Name</th>
+                <td>{{ company.name }}</td>
+            </tr>
+            <tr>
+                <th>Company's Address</th>
+                <td>{{ company.address }}</td>
+            </tr>
+            <tr>
+                <th>Company's Billing Address</th>
+                <td>{{ company.billAddress }}</td>
+            </tr>
+            <tr>
+                <th>Company's' Siren</th>
+                <td>{{ company.siren }}</td>
+            </tr>
+            <tr>
+                <th>Company's Phone Number</th>
+                <td>{{ company.phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th>Company's Logo</th>
+                <td>{{ company.logo }}</td>
+            </tr>
+            <tr>
+                <th>Company's Email</th>
+                <td>{{ company.email }}</td>
+            </tr>
+            <tr>
+                <th>Company's date of creation</th>
+                <td>{{ company.createAt ? company.createAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_company_index') }}">back to list</a>
+
+    <a href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+
+    {{ include('company/_delete_form.html.twig') }}
+</div>
+{% endblock %}

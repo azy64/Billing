@@ -1,0 +1,16 @@
+{% extends 'dashboard/index.html.twig' %}
+
+{% block title %}Dashboard - Edit Company{% endblock %}
+
+{% block content_page %}
+<div class="col-md-10 m-auto">
+    <h1 class="display-5">Edit Company</h1>
+    <hr/>
+
+    {{ include('company/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_company_index') }}">back to list</a>
+
+    {{ include('company/_delete_form.html.twig') }}
+</div>
+{% endblock %}
