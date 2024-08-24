@@ -43,6 +43,9 @@ class Customer
 
     #[ORM\Column(length: 10)]
     private ?string $companySiren = null;
+    public function __construct(){
+        $this->createAt= new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -141,6 +144,7 @@ class Customer
     public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
+        $createdBy->addCustomer($this);
 
         return $this;
     }

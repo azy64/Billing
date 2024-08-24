@@ -1,11 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/index.html.twig' %}
 
 {% block title %}Customer index{% endblock %}
 
-{% block body %}
-    <h1>Customer index</h1>
-
-    <table class="table">
+{% block content_page %}
+<div class="col-md-7">
+    <h1 class="display-5">Customers #{{customers|length}}</h1>
+    <hr/>
+    <table class="table table-striped w-25">
         <thead>
             <tr>
                 <th>Id</th>
@@ -48,4 +49,5 @@
     </table>
 
     <a href="{{ path('app_customer_new') }}">Create new</a>
+</div>
 {% endblock %}
