@@ -1,0 +1,14 @@
+{% extends 'dashboard/index.html.twig' %}
+
+{% block title %}New Customer{% endblock %}
+
+{% block content_page %}
+<div class="col-md-10 m-auto">
+    <h1 class="display-5">Add a new Customer</h1>
+    <hr/>
+
+    {{ include('customer/_form.html.twig') }}
+
+    <a href="{{ path('app_customer_index') }}">back to list</a>
+</div>
+{% endblock %}
