@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Form\CompanyType;
+use App\Security\Voter\CompanyVoter;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,19 +14,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 #[Route('/dashboard/company')]
-#[IsGranted("ROLE_USER")]
 class CompanyController extends AbstractController
 {
     #[Route('/', name: 'app_company_index', methods: ['GET'])]
+    #[IsGranted(CompanyVoter::LIST)]
+   
     public function index(CompanyRepository $companyRepository): Response
     {
+        $user= $this->getUser();
         return $this->render('company/index.html.twig', [
-            'companies' => $companyRepository->findAll(),
+            'companies' => $companyRepository->findBy(["owner"=>$user->getId()]),
         ]);
     }
 
     #[Route('/new', name: 'app_company_new', methods: ['GET', 'POST'])]
+    #[IsGranted(CompanyVoter::CREATE)]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $company = new Company();
@@ -51,6 +56,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
+    #[IsGranted(CompanyVoter::VIEW, subject:'company')]
     public function show(Company $company): Response
     {
         return $this->render('company/show.html.twig', [
@@ -59,6 +65,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[IsGranted(CompanyVoter::EDIT,'company')]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
@@ -69,7 +76,6 @@ class CompanyController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->render('company/edit.html.twig', [
             'company' => $company,
             'form' => $form,
@@ -77,6 +83,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_delete', methods: ['POST'])]
+    #[IsGranted(CompanyVoter::DELETE,'company')]
     public function delete(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->getPayload()->getString('_token'))) {

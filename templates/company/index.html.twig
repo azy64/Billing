@@ -3,7 +3,7 @@
 {% block title %}Dashboard - my Companies{% endblock %}
 
 {% block content_page %}
-<div class="col-md-10">
+<div class="col-md-11">
     <h1 class="display-5">My Companies [#{{app.user.companies|length }}]</h1>
     <hr/>
 
@@ -19,7 +19,7 @@
                 <th>Logo</th>
                 <th>Email</th>
                 <th>CreateAt</th>
-                <th>actions</th>
+                <th colspan="200" width="200">actions</th>
             </tr>
         </thead>
         <tbody>
@@ -34,9 +34,9 @@
                 <td>{{ company.logo }}</td>
                 <td>{{ company.email }}</td>
                 <td>{{ company.createAt ? company.createAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a class="btn btn-success mb-1" href="{{ path('app_company_show', {'id': company.id}) }}">show</a>
-                    <a class="btn btn-warning" href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+                <td width="5em" colspan="100">
+                    <a class="btn btn-sm btn-success" href="{{ path('app_company_show', {'id': company.id}) }}">show</a>
+                    <a class="btn btn-sm btn-warning" href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
