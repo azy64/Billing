@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
@@ -37,9 +39,16 @@ class Item
     #[ORM\Column]
     private ?\DateTimeImmutable $createAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'items')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Invoice $invoice = null;
+    /**
+     * @var Collection<int, Basket>
+     */
+    #[ORM\OneToMany(targetEntity: Basket::class, mappedBy: 'item')]
+    private Collection $baskets;
+
+    public function __construct() {
+        $this->createAt = new \DateTimeImmutable();
+        $this->baskets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -142,14 +151,33 @@ class Item
         return $this;
     }
 
-    public function getInvoice(): ?Invoice
+
+    /**
+     * @return Collection<int, Basket>
+     */
+    public function getBaskets(): Collection
     {
-        return $this->invoice;
+        return $this->baskets;
     }
 
-    public function setInvoice(?Invoice $invoice): static
+    public function addBasket(Basket $basket): static
     {
-        $this->invoice = $invoice;
+        if (!$this->baskets->contains($basket)) {
+            $this->baskets->add($basket);
+            $basket->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBasket(Basket $basket): static
+    {
+        if ($this->baskets->removeElement($basket)) {
+            // set the owning side to null (unless already changed)
+            if ($basket->getItem() === $this) {
+                $basket->setItem(null);
+            }
+        }
 
         return $this;
     }

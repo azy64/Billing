@@ -51,19 +51,20 @@ class Invoice
     #[ORM\Column]
     private ?\DateTimeImmutable $createAt = null;
 
-    /**
-     * @var Collection<int, Item>
-     */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'invoice', orphanRemoval: true)]
-    private Collection $items;
-
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?InvoiceStatus $invoiceStatus = null;
 
+    /**
+     * @var Collection<int, Basket>
+     */
+    #[ORM\OneToMany(targetEntity: Basket::class, mappedBy: 'invoice')]
+    private Collection $baskets;
+
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->createAt = new \DateTimeImmutable();
+        $this->baskets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,36 +204,6 @@ class Invoice
         return $this;
     }
 
-    /**
-     * @return Collection<int, Item>
-     */
-    public function getItems(): Collection
-    {
-        return $this->items;
-    }
-
-    public function addItem(Item $item): static
-    {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setInvoice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeItem(Item $item): static
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getInvoice() === $this) {
-                $item->setInvoice(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getInvoiceStatus(): ?InvoiceStatus
     {
         return $this->invoiceStatus;
@@ -241,6 +212,36 @@ class Invoice
     public function setInvoiceStatus(?InvoiceStatus $invoiceStatus): static
     {
         $this->invoiceStatus = $invoiceStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Basket>
+     */
+    public function getBaskets(): Collection
+    {
+        return $this->baskets;
+    }
+
+    public function addBasket(Basket $basket): static
+    {
+        if (!$this->baskets->contains($basket)) {
+            $this->baskets->add($basket);
+            $basket->setInvoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBasket(Basket $basket): static
+    {
+        if ($this->baskets->removeElement($basket)) {
+            // set the owning side to null (unless already changed)
+            if ($basket->getInvoice() === $this) {
+                $basket->setInvoice(null);
+            }
+        }
 
         return $this;
     }

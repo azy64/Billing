@@ -156,7 +156,7 @@ class Company
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
-        $owner->addCompany($this);
+        //$owner->addCompany($this);
 
         return $this;
     }
