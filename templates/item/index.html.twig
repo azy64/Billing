@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Item index{% endblock %}
+
+{% block body %}
+    <h1>Item index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Currency</th>
+                <th>UnitPrice</th>
+                <th>Avt</th>
+                <th>TotalTVA</th>
+                <th>TotalTTC</th>
+                <th>CreateAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.currency }}</td>
+                <td>{{ item.unitPrice }}</td>
+                <td>{{ item.avt }}</td>
+                <td>{{ item.totalTVA }}</td>
+                <td>{{ item.totalTTC }}</td>
+                <td>{{ item.createAt ? item.createAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_item_show', {'id': item.id}) }}">show</a>
+                    <a href="{{ path('app_item_edit', {'id': item.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_item_new') }}">Create new</a>
+{% endblock %}
